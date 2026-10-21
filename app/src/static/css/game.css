@@ -1,0 +1,152 @@
+:root {
+    --violet: #8b5cf6;
+    --pink: #ec4899;
+    --cyan: #67e8f9;
+    --text: #f5f3ff;
+    --muted: #a5a1c9;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    background: #07041a;
+    color: var(--text);
+    font-family: 'Poppins', system-ui, sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+canvas {
+    position: fixed;
+    inset: 0;
+    display: block;
+    touch-action: none;
+}
+
+.hidden { display: none !important; }
+
+/* HUD */
+#hud {
+    position: fixed;
+    top: 18px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    pointer-events: none;
+}
+#score {
+    font-size: clamp(2.2rem, 7vw, 3.4rem);
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-shadow: 0 0 24px rgba(139, 92, 246, 0.9);
+}
+#mult {
+    min-height: 1.4em;
+    font-weight: 600;
+    color: var(--cyan);
+    text-shadow: 0 0 14px var(--cyan);
+}
+#best-box {
+    position: fixed;
+    top: 22px;
+    left: 20px;
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    pointer-events: none;
+}
+#best-box b { display: block; font-size: 1.2rem; color: var(--text); letter-spacing: 0; }
+
+#mute {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 5;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.07);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+/* Panneaux */
+.panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+    width: min(92vw, 440px);
+    padding: 34px 28px;
+    text-align: center;
+    border-radius: 28px;
+    background: rgba(12, 8, 40, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 0 80px rgba(139, 92, 246, 0.35);
+    animation: rise 0.5s cubic-bezier(.2, 1.2, .4, 1);
+}
+@keyframes rise {
+    from { opacity: 0; transform: translate(-50%, -44%) scale(0.95); }
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 9vw, 3.1rem);
+    font-weight: 800;
+    letter-spacing: 3px;
+    line-height: 1.05;
+}
+h1 span, .final {
+    background: linear-gradient(90deg, var(--violet), var(--pink), var(--cyan), var(--violet));
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 5s linear infinite;
+}
+@keyframes shine { to { background-position: 250% 0; } }
+
+h2 { margin: 0; font-size: 1rem; letter-spacing: 6px; text-transform: uppercase; color: var(--muted); }
+.final { font-size: 4.2rem; font-weight: 800; line-height: 1.2; }
+.tag { margin: 6px 0 18px; color: var(--muted); font-size: 0.9rem; }
+
+.how { list-style: none; margin: 0 0 24px; padding: 0; text-align: left; font-size: 0.85rem; color: var(--muted); }
+.how li { display: flex; align-items: center; gap: 12px; padding: 7px 0; }
+.how b { color: var(--text); }
+.dot { flex: none; width: 12px; height: 12px; border-radius: 50%; }
+.dot.orb { background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+.dot.rock { background: #ff4d6d; box-shadow: 0 0 10px #ff4d6d; border-radius: 3px; transform: rotate(20deg); }
+.dot.near { background: #fbbf24; box-shadow: 0 0 10px #fbbf24; }
+
+.cta {
+    border: 0;
+    padding: 15px 46px;
+    border-radius: 99px;
+    font: inherit;
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #fff;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--violet), var(--pink));
+    box-shadow: 0 8px 30px rgba(236, 72, 153, 0.45);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+.cta:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 12px 40px rgba(236, 72, 153, 0.65); }
+.cta:active { transform: scale(0.97); }
+
+.link { display: block; margin-top: 18px; color: var(--muted); font-size: 0.8rem; text-decoration: none; }
+.link:hover { color: var(--text); }
+
+@media (prefers-reduced-motion: reduce) {
+    h1 span, .final, .panel { animation: none; }
+}

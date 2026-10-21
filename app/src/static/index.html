@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="theme-color" content="#07041a" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/game.css" />
+    <title>Orbit Dodo</title>
+</head>
+<body>
+    <canvas id="game"></canvas>
+
+    <div id="hud" class="hidden">
+        <div id="score">0</div>
+        <div id="mult"></div>
+    </div>
+    <div id="best-box" class="hidden">MEILLEUR <b id="best">0</b></div>
+    <button id="mute" aria-label="Son" title="Son (M)">🔊</button>
+
+    <section id="menu" class="panel">
+        <h1>ORBIT <span>DODO</span></h1>
+        <p class="tag">Un dodo. Un soleil. Zéro pitié.</p>
+        <ul class="how">
+            <li><b>↑ / ↓</b> ou touche l'écran pour changer d'orbite</li>
+            <li><i class="dot orb"></i> Ramasse les orbes pour monter le combo</li>
+            <li><i class="dot rock"></i> Évite les astéroïdes (certains sautent d'orbite !)</li>
+            <li><i class="dot near"></i> Frôle-les pour des points bonus</li>
+        </ul>
+        <button id="play" class="cta">Jouer</button>
+        <a class="link" href="todo.html">ma todo list →</a>
+    </section>
+
+    <section id="over" class="panel hidden">
+        <h2>Game over</h2>
+        <div class="final" id="final">0</div>
+        <p id="record" class="tag"></p>
+        <button id="again" class="cta">Rejouer</button>
+    </section>
+
+    <script src="js/game.js"></script>
+</body>
+</html>
