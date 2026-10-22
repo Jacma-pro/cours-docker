@@ -111,6 +111,62 @@ docker volume create portainer_data
 docker run -dp 443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
 ```
 
+### Construire un Dockerfile
+
+Exemple de la J1 : le Dockerfile de l'application « todo » (`app/Dockerfile`), une app Node/Express qui écoute sur le port 3000.
+
+```dockerfile
+FROM node:24-alpine
+WORKDIR /app
+COPY package*.json .
+RUN yarn install --production
+COPY . .
+EXPOSE 3000
+CMD ["node", "src/index.js"]
+```
+
+Chaque instruction crée une **couche** de l'image :
+
+| Instruction | Rôle | Dans l'exemple |
+|---|---|---|
+| `FROM` | Image de départ | `node:24-alpine` : Node.js sur Alpine Linux, une base très légère |
+| `WORKDIR` | Dossier de travail dans l'image (créé s'il n'existe pas) | `/app` |
+| `COPY` | Copie des fichiers de la machine vers l'image | d'abord `package*.json`, puis tout le code |
+| `RUN` | Exécute une commande **pendant le build** | `yarn install --production` installe les dépendances |
+| `EXPOSE` | Documente le port d'écoute (ne publie rien, c'est `-p` qui publie) | `3000` |
+| `CMD` | Commande lancée **au démarrage du conteneur** | `node src/index.js` |
+
+Points importants :
+
+- **Ordre des instructions et cache** : on copie d'abord `package*.json`, on installe les dépendances, et seulement ensuite on copie le code (`COPY . .`). Tant que les dépendances ne changent pas, Docker réutilise le cache et le rebuild est rapide.
+- **`--production`** : n'installe que les `dependencies` et ignore les `devDependencies` (`jest`, `nodemon`, `prettier`). L'image est plus légère.
+- **`RUN` ≠ `CMD`** : `RUN` s'exécute une fois à la construction de l'image, `CMD` à chaque démarrage d'un conteneur.
+- **Port** : l'app fait `app.listen(3000)`. C'est ce port de conteneur qu'on relie à un port de l'hôte, comme dans `docker run -dp 40269:3000 jacma38/app-dodo`.
+- **`.dockerignore`** : liste ce qui ne doit pas être copié par `COPY . .` (`node_modules`, `.git`). Celui de `app/` est vide pour l'instant.
+
+Construire et lancer cette image :
+
+```bash
+docker build -t app-dodo .
+docker run -dp 3000:3000 app-dodo
+```
+
+### Persistance des données
+
+- `src/persistence/index.js` choisit la base : **MySQL** si la variable d'environnement `MYSQL_HOST` est définie, sinon **SQLite**, dont le fichier est dans `/etc/todos/todo.db`.
+- Ce fichier est dans le système de fichiers du conteneur : si on supprime le conteneur (`docker rm`), les données disparaissent. Un **volume** permet de les garder en dehors du conteneur.
+
+```bash
+docker run -dp 3000:3000 -v todo-db:/etc/todos app-dodo   # volume nommé monté sur le dossier de la base
+```
+
+### Commandes utiles en plus
+
+```bash
+docker logs nom_du_conteneur         # Affiche les logs du conteneur (-f pour les suivre)
+docker exec -it nom_du_conteneur sh  # Ouvre un shell dans un conteneur en cours d'exécution
+```
+
 ## Résumé J1
 
 La conteneurisation avec Docker permet de créer, distribuer et exécuter une application dans un environnement isolé et reproductible. Une image sert de modèle, un conteneur est une instance de cette image, et le Dockerfile décrit sa construction.
